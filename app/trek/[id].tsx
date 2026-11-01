@@ -11,6 +11,7 @@ import { useTheme } from '@rootnative/core'
 import { Motion, Stagger } from '@rootnative/inertia'
 import { router, useLocalSearchParams } from 'expo-router'
 import type { ReactNode } from 'react'
+import { Platform } from 'react-native'
 import { PageScroll, usePageScroll } from '../../src/components/pageScroll'
 import {
   PAGE_FILL,
@@ -21,7 +22,7 @@ import {
 import { PHOTO_HEIGHT } from '../../src/components/TrekCard'
 import { elevationGain, gradient, position } from '../../src/data/types'
 import { useTrek } from '../../src/data/useTreks'
-import { plate } from '../../src/theme/motion'
+import { hero, plate } from '../../src/theme/motion'
 
 /**
  * One route, opened out to the full sheet.
@@ -96,6 +97,7 @@ export default function TrekDetailScreen() {
         scroll={scroll}
         contentStyle={contentStyle}
         headerHeights={headerHeights}
+        backdropDelay={BACKDROP_DELAY}
         header={
           <AppBar
             title={trek.name}
@@ -199,6 +201,13 @@ export default function TrekDetailScreen() {
     </Layout>
   )
 }
+
+/**
+ * How long the contour sheet waits on native, in ms. Its mount and first draw
+ * block the main thread, and the FLIP clock runs through any block, so the
+ * photo skips the frames of its flight. Web has no FLIP, so it does not wait.
+ */
+const BACKDROP_DELAY = Platform.OS === 'web' ? 0 : hero.duration
 
 /** Delay before the first block rises, in ms. */
 const RISE_DELAY = 160

@@ -1,5 +1,5 @@
 import { useThemeMode } from '@rootnative/core'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Platform, View } from 'react-native'
 import { ContourField } from './ContourField'
 
@@ -29,18 +29,32 @@ export interface SheetContent {
  * field that shrank with the page would unmount its lower bands, and draw them
  * again when the page grew back.
  */
-export function SheetBackdrop({ content }: { content: SheetContent }) {
+export function SheetBackdrop({
+  content,
+  delay = 0,
+}: {
+  content: SheetContent
+  /** Milliseconds to hold the field back after mount — see `PageScroll`. */
+  delay?: number
+}) {
   const { scheme } = useThemeMode()
+  const [held, setHeld] = useState(delay > 0)
   const fieldHeight = content.height + OVERSCROLL_BLEED
   const [drawnHeight, setDrawnHeight] = useState(fieldHeight)
   if (fieldHeight > drawnHeight) setDrawnHeight(fieldHeight)
+
+  useEffect(() => {
+    if (!held) return
+    const timer = setTimeout(() => setHeld(false), delay)
+    return () => clearTimeout(timer)
+  }, [held, delay])
 
   // The night accent is brighter than ink on paper, so the same value would
   // shout. `ContourField` animates this rather than setting it, so the density
   // crosses over with the ink colour instead of stepping.
   const opacity = scheme === 'dark' ? 0.24 : 0.34
 
-  if (content.width <= 0 || content.height <= 0) return null
+  if (held || content.width <= 0 || content.height <= 0) return null
 
   return (
     <View

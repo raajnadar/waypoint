@@ -1,5 +1,6 @@
 import { Motion } from '@rootnative/inertia'
 import { createMotionSvgComponent } from '@rootnative/inertia-svg'
+import { memo } from 'react'
 import Svg, { Ellipse, G } from 'react-native-svg'
 import { useContour } from '../theme/mode'
 import { ink, ringDelay, withDelay } from '../theme/motion'
@@ -99,7 +100,13 @@ interface ContourFieldProps {
   opacity?: number
 }
 
-export function ContourField({
+/**
+ * Memoized, because the screen behind it renders again on each focus change
+ * (`usePageScroll` reads it). A render sends new props to every ring, and
+ * react-native-svg then redraws the whole canvas on the main thread: about
+ * 140 ms on the iOS simulator, in the frames where the photo FLIP starts.
+ */
+export const ContourField = memo(function ContourField({
   width,
   height,
   opacity = 1,
@@ -197,4 +204,4 @@ export function ContourField({
       </Svg>
     </Motion.View>
   )
-}
+})

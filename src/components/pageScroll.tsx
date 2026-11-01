@@ -127,6 +127,13 @@ type PageScrollProps = {
    * the scroller can stay where it is.
    */
   minHeight?: number
+  /**
+   * Milliseconds to hold back the contour sheet after mount. On native its
+   * mount blocks the main thread, so a screen that opens with a motion holds
+   * the sheet until that motion ends. The sheet inks itself in from empty, so
+   * a later mount looks the same.
+   */
+  backdropDelay?: number
   children: ReactNode
 }
 
@@ -145,6 +152,7 @@ export function PageScroll({
   header,
   headerHeights,
   minHeight,
+  backdropDelay,
   children,
 }: PageScrollProps) {
   const [content, setContent] = useState<SheetContent>({ width: 0, height: 0 })
@@ -192,7 +200,7 @@ export function PageScroll({
           is shorter than the window.
         */}
         <View style={{ flexGrow: 1, minHeight }} onLayout={handleLayout}>
-          <SheetBackdrop content={content} />
+          <SheetBackdrop content={content} delay={backdropDelay} />
           {column}
         </View>
       </>
@@ -215,7 +223,7 @@ export function PageScroll({
         scrollIndicatorInsets={{ top: headerHeights.collapsed }}
         onContentSizeChange={handleContentSize}
       >
-        <SheetBackdrop content={content} />
+        <SheetBackdrop content={content} delay={backdropDelay} />
         {column}
       </Motion.ScrollView>
       {headerBox}
