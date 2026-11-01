@@ -2,6 +2,7 @@ import {
   entranceGuardCss,
   entranceGuardNoscriptCss,
 } from '@rootnative/inertia/static-export'
+import { useServerDocumentContext } from 'expo-router/html'
 import type { PropsWithChildren } from 'react'
 
 /**
@@ -18,8 +19,11 @@ import type { PropsWithChildren } from 'react'
  * bundle never runs, and nothing reports it.
  */
 export default function Html({ children }: PropsWithChildren) {
+  const { htmlAttributes, headNodes, bodyAttributes, bodyNodes } =
+    useServerDocumentContext()
+
   return (
-    <html lang="en">
+    <html lang="en" {...htmlAttributes}>
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -42,8 +46,18 @@ export default function Html({ children }: PropsWithChildren) {
             dangerouslySetInnerHTML={{ __html: entranceGuardNoscriptCss }}
           />
         </noscript>
+
+        {/*
+          From Expo SDK 58 the renderer gives the styles, the CSS and the
+          JavaScript bundles to this shell. Without these nodes the page does
+          not hydrate.
+        */}
+        {headNodes}
       </head>
-      <body>{children}</body>
+      <body {...bodyAttributes}>
+        {children}
+        {bodyNodes}
+      </body>
     </html>
   )
 }
