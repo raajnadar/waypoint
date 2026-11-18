@@ -38,7 +38,7 @@
       "router": {}
     },
     "experiments": {
-      "baseUrl": "/ui-example"
+      "baseUrl": "/waypoint"
     }
   }
 }

@@ -6,11 +6,11 @@ The app uses a "Survey" design language — a vintage topographic map sheet, wit
 
 ## Live demo
 
-**https://rootnative.github.io/ui-example/**
+**https://raajnadar.github.io/waypoint/**
 
 Scan to open the demo on a phone:
 
-<img src="assets/qr-web.svg" alt="QR code that links to https://rootnative.github.io/ui-example/" width="180" height="180">
+<img src="assets/qr-web.svg" alt="QR code that links to https://raajnadar.github.io/waypoint/" width="180" height="180">
 
 This QR code opens the **web build** in the phone browser. It does not open Expo Go. To run the app in Expo Go, start the dev server as shown below — `expo start` prints its own QR code in the terminal.
 
@@ -41,7 +41,7 @@ Pages deployment as the web app:
 
 ```
 public/api/v1/treks.json
-https://rootnative.github.io/ui-example/api/v1/treks.json
+https://raajnadar.github.io/waypoint/api/v1/treks.json
 ```
 
 Expo copies `public/` into the web export as is, so a push that edits the
@@ -114,7 +114,7 @@ The workflow runs `yarn install --frozen-lockfile`, then `npx expo export --plat
 Two settings in [app.json](app.json) make this work:
 
 - `web.output` is `static`, so the export writes pre-rendered HTML files.
-- `experiments.baseUrl` is `/ui-example`, because Pages serves this site from a
+- `experiments.baseUrl` is `/waypoint`, because Pages serves this site from a
   subpath, not from the domain root. Every bundled asset gets that prefix. If
   the repository is renamed, change this value to match.
 

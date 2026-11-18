@@ -4,7 +4,7 @@ import type { EnrichedTrek, Trek, TrekEnrichment } from './types'
 import { fetchEnrichment } from './wikipedia'
 
 /** The GitHub Pages copy of `public/api/v1/treks.json`. */
-const TREKS_URL = 'https://rootnative.github.io/ui-example/api/v1/treks.json'
+const TREKS_URL = 'https://raajnadar.github.io/waypoint/api/v1/treks.json'
 
 const BUNDLED_TREKS = bundled.treks as Trek[]
 
