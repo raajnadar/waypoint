@@ -27,6 +27,7 @@ import {
 } from '../src/components/sheetLayout'
 import { TrekCard } from '../src/components/TrekCard'
 import { useTreks } from '../src/data/useTreks'
+import { useFlightDriver } from '../src/dev/flightProbe'
 
 /**
  * The gallery: every surveyed route as a plate on the sheet.
@@ -55,6 +56,7 @@ export default function GalleryScreen() {
   const [dealt, setDealt] = useState(false)
 
   const visible = useMemo(() => applyFilter(treks, filter), [treks, filter])
+  useFlightDriver(treks[0]?.id, !loading && !!treks[0]?.enrichment?.imageUrl)
 
   // The cascade belongs to the first deal only. A plate that a filter brings
   // back arrives at once, or the last one waits 350ms behind the others.

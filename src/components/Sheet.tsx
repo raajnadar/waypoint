@@ -1,6 +1,7 @@
 import { useThemeMode } from '@rootnative/core'
 import { useEffect, useState } from 'react'
 import { Platform, View } from 'react-native'
+import { useSheetsHidden } from '../dev/flightProbe'
 import { ContourField } from './ContourField'
 
 /**
@@ -54,7 +55,8 @@ export function SheetBackdrop({
   // crosses over with the ink colour instead of stepping.
   const opacity = scheme === 'dark' ? 0.24 : 0.34
 
-  if (held || content.width <= 0 || content.height <= 0) return null
+  const hidden = useSheetsHidden()
+  if (hidden || held || content.width <= 0 || content.height <= 0) return null
 
   return (
     <View

@@ -11,7 +11,7 @@ import { useTheme } from '@rootnative/core'
 import { Motion, Stagger } from '@rootnative/inertia'
 import { router, useLocalSearchParams } from 'expo-router'
 import type { ReactNode } from 'react'
-import { Platform } from 'react-native'
+import { Platform, View } from 'react-native'
 import { PageScroll, usePageScroll } from '../../src/components/pageScroll'
 import {
   PAGE_FILL,
@@ -22,6 +22,7 @@ import {
 import { PHOTO_HEIGHT } from '../../src/components/TrekCard'
 import { elevationGain, gradient, position } from '../../src/data/types'
 import { useTrek } from '../../src/data/useTreks'
+import { useFlightProbe } from '../../src/dev/flightProbe'
 import { hero, plate } from '../../src/theme/motion'
 
 /**
@@ -44,6 +45,8 @@ export default function TrekDetailScreen() {
   // This bar does not collapse, but the hook still owns which thing scrolls.
   const scroll = usePageScroll()
   const headerSurface = useSheetHeaderSurface(scroll.scrollY)
+  const probe = useFlightProbe()
+  if (probe.variant === 'empty') return <View style={PAGE_FILL} />
 
   // The list is local data, so a miss means a bad id rather than a slow
   // network. Enrichment is still in flight on a cold deep link.
@@ -113,7 +116,7 @@ export default function TrekDetailScreen() {
           block does not jump down when the photo lands. The pulse stays on
           here: one skeleton cannot compete with itself.
         */}
-        {photo ? (
+        {photo && probe.variant !== 'no-hero' ? (
           <Motion.Image
             {...heroMotion}
             source={{ uri: photo }}
@@ -134,6 +137,7 @@ export default function TrekDetailScreen() {
           `Stagger` gives each block its own delay, in reading order. The first
           block waits for the hero to cover most of its flight.
         */}
+        {probe.variant !== 'no-content' ? (
         <Stagger interval={RISE_INTERVAL} delay={RISE_DELAY}>
           <Rise>
             <Column gap="xs">
@@ -197,6 +201,7 @@ export default function TrekDetailScreen() {
             </Typography>
           </Rise>
         </Stagger>
+        ) : null}
       </PageScroll>
     </Layout>
   )
